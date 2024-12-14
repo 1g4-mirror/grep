@@ -1163,18 +1163,17 @@ combined with the @option{-z} (@option{--null-data}) option, and note that
 For documentation, refer to @url{https://www.pcre.org/}, with these caveats:
 @itemize
 @item
-@samp{\d} matches only the ten ASCII digits
-(and @samp{\D} matches the complement), regardless of locale.
-Use @samp{\p@{Nd@}} to also match non-ASCII digits.
-(The behavior of @samp{\d} and @samp{\D} is unspecified after
-in-regexp directives like @samp{(?aD)}.)
-
-@item
 Although PCRE tracks the syntax and semantics of Perl's regular
 expressions, the match is not always exact.  For example, Perl
 evolves and a Perl installation may predate or postdate the PCRE2
 installation on the same host, or their Unicode versions may differ,
 or Perl and PCRE2 may disagree about an obscure construct.
+
+For example, @samp{\d} ordinarily is like @samp{\p@{Nd@}} and matches
+all decimal digits, whereas @samp{[0-9]} matches only ASCII digits.
+PCRE2 versions after 10.42 let you change this behavior: in a regular
+expression that starts with @samp{(?aD)}, @samp{\d} is like @samp{[0-9]}.
+However, PCRE2 10.42 and earlier do not support @samp{(?aD)}.
 
 @item
 By default, @command{grep} applies each regexp to a line at a time,

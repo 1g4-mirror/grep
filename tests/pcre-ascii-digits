@@ -18,7 +18,7 @@ require_pcre_
 echo . | grep -qP '(*UTF).' 2>/dev/null \
   || skip_ 'PCRE unicode support is compiled out'
 echo 0 | grep -qP '(?aD)\d' \
-  || skip_ 'PCRE 10.42 and older lack PCRE2_EXTRA_ASCII_BSD'
+  || skip_ 'PCRE 10.42 and older lack (?aD)'
 
 fail=0
 
@@ -29,27 +29,27 @@ printf '\331\240\331\241\331\242\331\243\331\244' > in || framework_failure_
 printf '\331\245\331\246\331\247\331\250\331\251' >> in || framework_failure_
 printf '\n' >> in || framework_failure_
 
-# Ensure that \d matches no character.
-returns_ 1 grep -P '\d' in > out || fail=1
+# Ensure that (?aD)\d matches no character.
+returns_ 1 grep -P '(?aD)\d' in > out || fail=1
 compare /dev/null out || fail=1
 
-# Ensure that ^\D+$ matches the entire line.
-grep -P '^\D+$' in > out || fail=1
+# Ensure that (?aD)^\D+$ matches the entire line.
+grep -P '(?aD)^\D+$' in > out || fail=1
 compare in out || fail=1
 
 # When built with PCRE2 10.43 and newer, one may use (?aD) and (?-aD)
-# to toggle between modes.  (?aD) is the default (making \d == [0-9]).
-# (?-aD) relaxes \d, making it match "all" digits.
+# to toggle between modes.  (?aD) makes \d == [0-9].
+# (?-aD), the default, makes \d match all digits.
 # Use mixed digits as input: Arabic 0 and ASCII 4: ٠4
 printf '\331\2404\n' > in2 || framework_failure_
 
-returns_ 1 grep -P '\d\d' in2 > out || fail=1
+returns_ 1 grep -P '(?aD)\d\d' in2 > out || fail=1
 compare /dev/null out || fail=1
 
-grep -P '(?-aD)\d(?aD)\d' in2 > out || fail=1
+grep -P '\d(?aD)\d' in2 > out || fail=1
 compare in2 out || fail=1
 
-returns_ 1 grep -P '\d(?-aD)\d' in2 > out || fail=1
+returns_ 1 grep -P '(?aD)\d(?-aD)\d' in2 > out || fail=1
 compare /dev/null out || fail=1
 
 Exit $fail
