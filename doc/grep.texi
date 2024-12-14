@@ -1155,25 +1155,28 @@ Interpret patterns as fixed strings, not regular expressions.
 @opindex --perl-regexp
 @cindex matching Perl-compatible regular expressions
 Interpret patterns as Perl-compatible regular expressions (PCREs).
-PCRE support is here to stay, but consider this option experimental when
-combined with the @option{-z} (@option{--null-data}) option, and note that
-@samp{grep@ -P} may warn of unimplemented features.
 @xref{Other Options}.
 
 For documentation, refer to @url{https://www.pcre.org/}, with these caveats:
 @itemize
 @item
+In a UTF-8 locale, Perl treats data as UTF-8 only under certain
+conditions, e.g., if @command{perl} is invoked with the @option{-C}
+option or the @env{PERL_UNICODE} environment variable set appropriately.
+In contrast, in a UTF-8 locale @command{grep} always treats data as UTF-8.
+
+@item
 Although PCRE tracks the syntax and semantics of Perl's regular
-expressions, the match is not always exact.  For example, Perl
+expressions, the match is not always exact.  Perl
 evolves and a Perl installation may predate or postdate the PCRE2
 installation on the same host, or their Unicode versions may differ,
 or Perl and PCRE2 may disagree about an obscure construct.
 
-For example, @samp{\d} ordinarily is like @samp{\p@{Nd@}} and matches
-all decimal digits, whereas @samp{[0-9]} matches only ASCII digits.
-PCRE2 versions after 10.42 let you change this behavior: in a regular
+For example, @samp{\d} ordinarily is like
+@samp{\p@{General_Category: Decimal_Number@}} and matches all decimal digits,
+whereas @samp{[0-9]} matches only ASCII digits.
+PCRE2 versions 10.43 and later let you change this behavior: in a regular
 expression that starts with @samp{(?aD)}, @samp{\d} is like @samp{[0-9]}.
-However, PCRE2 10.42 and earlier do not support @samp{(?aD)}.
 
 @item
 By default, @command{grep} applies each regexp to a line at a time,
