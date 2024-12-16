@@ -1180,10 +1180,16 @@ evolves and a Perl installation may predate or postdate the PCRE2
 installation on the same host, or their Unicode versions may differ,
 or Perl and PCRE2 may disagree about an obscure construct.
 
-For example, on UTF-8 data @samp{\d} ordinarily is like
-@samp{[[:digit:]]}, @samp{\p@{Nd@}}, and @samp{\p@{General_Category:
-Decimal_Number@}} and matches all decimal digits,
-whereas @samp{[0-9]} matches only ASCII digits.
+For example, on UTF-8 data @samp{[0-9]} matches only ASCII digits,
+whereas @samp{\d} ordinarily is like @samp{[[:digit:]]},
+@samp{\p@{Nd@}} and @samp{\p@{General_Category: Decimal_Number@}}
+and also matches non-ASCII digits like
+@c This does not display correctly in PDF with texinfo 7.1
+@c and pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023/Fedora 40).
+@ifnottex
+``٣''
+@end ifnottex
+(U+0663 ARABIC-INDIC DIGIT THREE).
 You can change this by starting a regular expression with
 @samp{(?aD)}, which causes @samp{\d} to act like @samp{[0-9]}.
 However, @samp{(?aD)} and its inverse @samp{(?-aD)} are available only
