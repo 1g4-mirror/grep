@@ -33,6 +33,9 @@
 # define PCRE2_ERROR_DEPTHLIMIT PCRE2_ERROR_RECURSIONLIMIT
 # define pcre2_set_depth_limit pcre2_set_recursion_limit
 #endif
+#ifndef PCRE2_EXTRA_ASCII_BSD
+# define PCRE2_EXTRA_ASCII_BSD 0
+#endif
 
 /* Use PCRE2_MATCH_INVALID_UTF if supported and not buggy;
    see <https://github.com/PCRE2Project/pcre2/issues/224>.
@@ -165,10 +168,18 @@ Pcompile (char *pattern, idx_t size, reg_syntax_t ignored, bool exact)
       if (! localeinfo.using_utf8)
         die (EXIT_TROUBLE, 0, _("-P supports only unibyte and UTF-8 locales"));
 
-      flags |= PCRE2_UTF | PCRE2_UCP;
+      flags |= PCRE2_UTF;
 
       /* If supported, consider invalid UTF-8 as a barrier not an error.  */
       flags |= MATCH_INVALID_UTF;
+
+      /* If PCRE2_EXTRA_ASCII_BSD is available, use PCRE2_UCP
+         so that \d does not have the undesirable effect of matching
+         non-ASCII digits.  Otherwise (i.e., with PCRE2 10.42 and earlier),
+         escapes like \w have only their ASCII interpretations,
+         but that's better than the confusion that would ensue if \d
+         matched non-ASCII digits.  */
+      flags |= PCRE2_EXTRA_ASCII_BSD ? PCRE2_UCP : 0;
 
 #if 0
       /* Do not match individual code units but only UTF-8.  */
@@ -180,12 +191,16 @@ Pcompile (char *pattern, idx_t size, reg_syntax_t ignored, bool exact)
   if (rawmemchr (pattern, '\n') != patlim)
     die (EXIT_TROUBLE, 0, _("the -P option only supports a single pattern"));
 
+#ifdef PCRE2_EXTRA_MATCH_LINE
+  uint32_t extra_options = (PCRE2_EXTRA_ASCII_BSD
+                            | (match_lines ? PCRE2_EXTRA_MATCH_LINE : 0));
+  pcre2_set_compile_extra_options (ccontext, extra_options);
+#endif
+
   void *re_storage = nullptr;
   if (match_lines)
     {
-#ifdef PCRE2_EXTRA_MATCH_LINE
-      pcre2_set_compile_extra_options (ccontext, PCRE2_EXTRA_MATCH_LINE);
-#else
+#ifndef PCRE2_EXTRA_MATCH_LINE
       static char const *const xprefix = "^(?:";
       static char const *const xsuffix = ")$";
       idx_t re_size = size + strlen (xprefix) + strlen (xsuffix);

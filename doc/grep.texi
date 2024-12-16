@@ -1174,27 +1174,45 @@ In contrast, in a UTF-8 locale @command{grep} and @command{git grep}
 always treat data as UTF-8.
 
 @item
+In Perl and @command{git grep -P}, @samp{\d} matches all Unicode digits,
+even if they are not ASCII.
+For example, @samp{\d} matches
+@ifnottex
+``٣''
+@end ifnottex
+(U+0663 ARABIC-INDIC DIGIT THREE).
+In contrast, in @samp{grep -P}, @samp{\d} matches only
+the ten ASCII digits, regardless of locale.
+In @command{pcre2grep}, @samp{\d} ordinarily behaves like Perl and
+@command{git grep -P}, but when given the @option{--posix-digit} option
+it behaves like @samp{grep -P}.
+(On all platforms, @samp{\D} matches the complement of @samp{\d}.)
+
+@item
+The pattern @samp{[[:digit:]]} matches all Unicode digits
+in Perl, @samp{grep -P}, @command{git grep -P}, and @command{pcre2grep},
+so you can use it
+to get the effect of Perl's @samp{\d} on all these platforms.
+In other words, in Perl and @command{git grep -P},
+@samp{\d} is equivalent to @samp{[[:digit:]]},
+whereas in @samp{grep -P}, @samp{\d} is equivalent to @samp{[0-9]},
+and @command{pcre2grep} ordinarily follows Perl but
+when given @option{--posix-digit} it follows @samp{grep -P}.
+
+(On all these platforms, @samp{[[:digit:]]} is equivalent to @samp{\p@{Nd@}}
+and to @samp{\p@{General_Category: Decimal_Number@}}.)
+
+@item
+If @command{grep} is built with PCRE2 version 10.43 (2024) or later,
+@samp{(?aD)} causes @samp{\d} to behave like @samp{[0-9]} and
+@samp{(?-aD)} causes it to behave like @samp{[[:digit:]]}.
+
+@item
 Although PCRE tracks the syntax and semantics of Perl's regular
 expressions, the match is not always exact.  Perl
 evolves and a Perl installation may predate or postdate the PCRE2
 installation on the same host, or their Unicode versions may differ,
 or Perl and PCRE2 may disagree about an obscure construct.
-
-For example, on UTF-8 data @samp{[0-9]} matches only ASCII digits,
-whereas @samp{\d} ordinarily is like @samp{[[:digit:]]},
-@samp{\p@{Nd@}} and @samp{\p@{General_Category: Decimal_Number@}}
-and also matches non-ASCII digits like
-@c This does not display correctly in PDF with texinfo 7.1
-@c and pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023/Fedora 40).
-@ifnottex
-``٣''
-@end ifnottex
-(U+0663 ARABIC-INDIC DIGIT THREE).
-You can change this by starting a regular expression with
-@samp{(?aD)}, which causes @samp{\d} to act like @samp{[0-9]}.
-However, @samp{(?aD)} and its inverse @samp{(?-aD)} are available only
-if @command{grep} is built with PCRE2 version 10.43 (2024) or later.
-(@samp{\D} always matches the complement of @samp{\d}.)
 
 @item
 By default, @command{grep} applies each regexp to a line at a time,

@@ -4,14 +4,6 @@ GNU grep NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  With -P, \d now matches all decimal digits, not just ASCII digits.
-  That is, \d is equivalent to [[:digit:]], not to [0-9].
-  This is more compatible with plain Perl, and reverts to the
-  behavior of grep 3.9.  If you prefer \d to mean [0-9] and
-  have a PCRE2 version later than 10.42 installed, you can
-  prefix your regular expression with (?aD).
-  [bug introduced in grep 3.10]
-
   Searching a directory with at least 100,000 entries no longer fails
   with "Operation not supported" and exit status 2. Now, this prints 1
   and no diagnostic, as expected:
