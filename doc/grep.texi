@@ -1155,7 +1155,6 @@ Interpret patterns as fixed strings, not regular expressions.
 @opindex --perl-regexp
 @cindex matching Perl-compatible regular expressions
 Interpret patterns as Perl-compatible regular expressions (PCREs).
-@xref{Other Options}.
 
 For documentation, refer to @url{https://www.pcre.org/}, with these caveats:
 @itemize
@@ -1163,7 +1162,10 @@ For documentation, refer to @url{https://www.pcre.org/}, with these caveats:
 In a UTF-8 locale, Perl treats data as UTF-8 only under certain
 conditions, e.g., if @command{perl} is invoked with the @option{-C}
 option or the @env{PERL_UNICODE} environment variable set appropriately.
-In contrast, in a UTF-8 locale @command{grep} always treats data as UTF-8.
+Similarly, @command{pcre2grep} treats data as UTF-8 only if
+invoked with @option{-u} or @option{-U}.
+In contrast, in a UTF-8 locale @command{grep} and @command{git grep}
+always treat data as UTF-8.
 
 @item
 Although PCRE tracks the syntax and semantics of Perl's regular
@@ -1172,11 +1174,15 @@ evolves and a Perl installation may predate or postdate the PCRE2
 installation on the same host, or their Unicode versions may differ,
 or Perl and PCRE2 may disagree about an obscure construct.
 
-For example, @samp{\d} ordinarily is like
-@samp{\p@{General_Category: Decimal_Number@}} and matches all decimal digits,
+For example, on UTF-8 data @samp{\d} ordinarily is like
+@samp{[[:digit:]]}, @samp{\p@{Nd@}}, and @samp{\p@{General_Category:
+Decimal_Number@}} and matches all decimal digits,
 whereas @samp{[0-9]} matches only ASCII digits.
-PCRE2 versions 10.43 and later let you change this behavior: in a regular
-expression that starts with @samp{(?aD)}, @samp{\d} is like @samp{[0-9]}.
+You can change this by starting a regular expression with
+@samp{(?aD)}, which causes @samp{\d} to act like @samp{[0-9]}.
+However, @samp{(?aD)} and its inverse @samp{(?-aD)} are available only
+if @command{grep} is built with PCRE2 version 10.43 (2024) or later.
+(@samp{\D} always matches the complement of @samp{\d}.)
 
 @item
 By default, @command{grep} applies each regexp to a line at a time,
