@@ -218,19 +218,25 @@ so that characters that differ only in case
 match each other.  Although this is straightforward when letters
 differ in case only via lowercase-uppercase pairs, the behavior is
 unspecified in other situations.  For example, uppercase ``S'' has an
-unusual lowercase counterpart ``ſ'' (Unicode character U+017F, LATIN
+unusual lowercase counterpart
+@c This does not display correctly in PDF with texinfo 7.1
+@c and pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023/Fedora 40).
+@ifnottex
+``ſ''
+@end ifnottex
+(Unicode character U+017F LATIN
 SMALL LETTER LONG S) in many locales, and it is unspecified whether
 this unusual character matches ``S'' or ``s'' even though uppercasing
 it yields ``S''.  Another example: the lowercase German letter ``ß''
-(U+00DF, LATIN SMALL LETTER SHARP S) is normally capitalized as the
+(U+00DF LATIN SMALL LETTER SHARP S) is normally capitalized as the
 two-character string ``SS'' but it does not match ``SS'', and it might
 not match the uppercase letter
-@c texinfo version 2023-03-04.12 complains about the following, saying
-@c "Character missing, sorry: LONG S."  For now, omit it if tex.
+@c This does not display correctly in PDF with texinfo 7.1
+@c and pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023/Fedora 40).
 @ifnottex
 ``ẞ''
 @end ifnottex
-(U+1E9E, LATIN CAPITAL LETTER
+(U+1E9E LATIN CAPITAL LETTER
 SHARP S) even though lowercasing the latter yields the former.
 
 @option{-y} is an obsolete synonym that is provided for compatibility.
