@@ -2064,10 +2064,11 @@ Context control:\n\
   -U, --binary              do not strip CR characters at EOL (MSDOS/Windows)\n\
 \n"));
       printf (_("\
-When FILE is '-', read standard input.  With no FILE, read '.' if\n\
-recursive, '-' otherwise.  With fewer than two FILEs, assume -h.\n\
-Exit status is 0 if any line is selected, 1 otherwise;\n\
-if any error occurs and -q is not given, the exit status is 2.\n"));
+When FILE is '-', read standard input.  If no FILE is given, read standard\n\
+input, but with -r, recursively search the working directory instead.  With\n\
+fewer than two FILEs, assume -h.  Exit status is 0 if any line is selected,\n\
+1 otherwise; if any error occurs and -q is not given, the exit status is 2.\n"
+                ));
       emit_bug_reporting_address ();
     }
   exit (status);
