@@ -2498,6 +2498,7 @@ main (int argc, char **argv)
 #endif
 #if defined ENABLE_NLS
   bindtextdomain (PACKAGE, LOCALEDIR);
+  bindtextdomain ("gnulib", GNULIB_LOCALEDIR);
   textdomain (PACKAGE);
 #endif
 
