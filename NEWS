@@ -16,6 +16,9 @@ GNU grep NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  The --unix-byte-offsets (-u) option is gone. In grep-3.7 (2021-08-14)
+  it became a warning-only no-op. Before then, it was a Windows-only no-op.
+
   On Windows platforms and on AIX in 32-bit mode, grep now supports
   Unicode characters outside the Basic Multilingual Plane.
 

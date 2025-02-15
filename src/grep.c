@@ -552,7 +552,6 @@ static struct option const long_options[] =
   {"silent", no_argument, nullptr, 'q'},
   {"text", no_argument, nullptr, 'a'},
   {"binary", no_argument, nullptr, 'U'},
-  {"unix-byte-offsets", no_argument, nullptr, 'u'},
   {"version", no_argument, nullptr, 'V'},
   {"with-filename", no_argument, nullptr, 'H'},
   {"word-regexp", no_argument, nullptr, 'w'},
@@ -2575,11 +2574,6 @@ main (int argc, char **argv)
       case 'U':
         if (O_BINARY)
           binary = true;
-        break;
-
-      case 'u':
-        /* Obsolete option; it had no effect; FIXME: remove in 2023  */
-        error (0, 0, _("warning: --unix-byte-offsets (-u) is obsolete"));
         break;
 
       case 'V':
