@@ -188,3 +188,5 @@ sc_timeout_prereq:
 	  | $(GREP) .							\
 	  && { echo '$(ME): timeout without use of require_timeout_'	\
 	    1>&2; exit 1; } || :
+
+codespell_ignore_words_list = clen,allo,Nd,abd,alph,debbugs,wee,UE,ois,creche
