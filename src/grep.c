@@ -1487,6 +1487,8 @@ grepbuf (char *beg, char const *lim)
         break;
       if (!out_invert || p < b)
         {
+          if (list_files != LISTFILES_NONE)
+            return 1;
           char *prbeg = out_invert ? p : b;
           char *prend = out_invert ? b : endp;
           prtext (prbeg, prend);
@@ -2899,7 +2901,7 @@ main (int argc, char **argv)
       if (max_count == INTMAX_MAX)
         done_on_match = true;
     }
-  out_quiet = count_matches | done_on_match;
+  out_quiet = count_matches | done_on_match | exit_on_match;
 
   if (out_after < 0)
     out_after = default_context;
