@@ -34,6 +34,9 @@ while :; do
   small_ms=$(LC_ALL=C user_time_ 1 grep --file=in empty) || fail=1
   test $small_ms -ge 200 && break
   n_pat=$(expr $n_pat '*' 2)
+  case $n_pat:$small_ms in
+    640000:0) skip_ 'user_time_ appears always to report 0 elapsed ms';;
+  esac
 done
 
 # Now, search for those same digits mapped to A-J.
