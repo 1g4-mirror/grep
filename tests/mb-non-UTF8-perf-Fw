@@ -34,6 +34,6 @@ timeout 500 grep -Fw 0 in
 
 # Before fixing the regression, this would have taken minutes.
 # With the fix, it typically completes in well under one second.
-returns_ 3 timeout 30 grep -Fw 0 in || fail=1
+returns_ 1 timeout 30 grep -Fw 0 in || fail=1
 
 Exit $fail
