@@ -22,23 +22,37 @@ AC_DEFUN([gl_FUNC_PCRE],
 
   if test $test_pcre != no; then
 
-    if test -z "${PCRE_CFLAGS+set}" && test -z "${PCRE_LIBS+set}"; then
-      PKG_CHECK_MODULES([PCRE], [libpcre2-8], [], [: ${PCRE_LIBS=-lpcre2-8}])
-    fi
+    AS_CASE([${PCRE_CFLAGS+set}@${PCRE_LIBS+set}@$PKG_CONFIG],
+      [@@false], [],
+      [@@*], [PKG_CHECK_MODULES([PCRE], [libpcre2-8], [], [:])])
 
     AC_CACHE_CHECK([for pcre2_compile], [pcre_cv_have_pcre2_compile],
       [pcre_saved_CFLAGS=$CFLAGS
        pcre_saved_LIBS=$LIBS
-       CFLAGS="$CFLAGS $PCRE_CFLAGS"
-       LIBS="$PCRE_LIBS $LIBS"
-       AC_LINK_IFELSE(
-         [AC_LANG_PROGRAM([[#define PCRE2_CODE_UNIT_WIDTH 8
-                            #include <pcre2.h>
-                          ]],
-            [[pcre2_code *p = pcre2_compile (0, 0, 0, 0, 0, 0);
-              return !p;]])],
-         [pcre_cv_have_pcre2_compile=yes],
-         [pcre_cv_have_pcre2_compile=no])
+       pcre_cv_have_pcre2_compile=no
+
+       while
+         CFLAGS="$pcre_saved_CFLAGS $PCRE_CFLAGS"
+         LIBS="$pcre_saved_LIBS $PCRE_LIBS"
+         AC_LINK_IFELSE(
+           [AC_LANG_PROGRAM([[#define PCRE2_CODE_UNIT_WIDTH 8
+                              #include <pcre2.h>
+                            ]],
+              [[pcre2_code *p = pcre2_compile (0, 0, 0, 0, 0, 0);
+                return !p;]])],
+           [pcre_cv_have_pcre2_compile=yes])
+         test $pcre_cv_have_pcre2_compile = no
+       do
+         AS_CASE([$PCRE_CFLAGS@$PCRE_LIBS],
+           [@-lpcre2-8],
+             [# Even the fallback setting fails; give up.
+              PCRE_LIBS=
+              break])
+         # Fallback setting.
+         PCRE_CFLAGS=
+         PCRE_LIBS=-lpcre2-8
+       done
+
        CFLAGS=$pcre_saved_CFLAGS
        LIBS=$pcre_saved_LIBS])
 
