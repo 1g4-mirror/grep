@@ -28,13 +28,12 @@ grep_SOURCES =					\
   die.h						\
   grep.c					\
   kwsearch.c					\
-  kwset.c					\
   searchutils.c
 if USE_PCRE
 grep_SOURCES += pcresearch.c
 endif
 
-noinst_HEADERS = grep.h kwset.h search.h system.h
+noinst_HEADERS = grep.h search.h system.h
 
 # Sometimes, the expansion of $(LIBINTL) includes -lc which may
 # include modules defining variables like 'optind', so libgreputils.a
