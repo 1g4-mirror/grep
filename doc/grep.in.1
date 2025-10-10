@@ -14,8 +14,7 @@
 .ie \n(.g .ds ' \(aq
 .el .ds ' '
 .if !\w@\*(lq@ \{\
-.\" Recent-enough groff an.tmac does not seem to be in use,
-.\" so define the strings lq and rq.
+.\" The implementation lacks \*(lq and presumably \*(rq.
 .	ie \n(.g \{\
 .		ds lq \(lq\"
 .		ds rq \(rq\"
