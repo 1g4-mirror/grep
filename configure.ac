@@ -133,6 +133,7 @@ if test $gl_gcc_warnings != no; then
   for w in $ws; do
     gl_WARN_ADD([$w])
   done
+  gl_WARN_ADD([-Wtrailing-whitespace]) # This project's coding style
   gl_WARN_ADD([-Wno-missing-field-initializers]) # We need this one
   gl_WARN_ADD([-Wno-sign-compare])     # Too many warnings for now
   gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
