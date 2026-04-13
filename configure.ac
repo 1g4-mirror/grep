@@ -22,15 +22,6 @@ AC_INIT([GNU grep],
         m4_esyscmd([build-aux/git-version-gen .tarball-version]),
         [bug-grep@gnu.org])
 
-if test -n "$GREP" || test -n "$EGREP"; then
-  AC_MSG_ERROR(
-    [no working 'grep' found
-  A working 'grep' command is needed to build GNU Grep.
-  This 'grep' should support -e and long lines.
-  On Solaris 10, install the package SUNWggrp or SUNWxcu4.
-  On Solaris 11, install the package text/gnu-grep or system/xopen/xcu4.])
-fi
-
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/grep.c])
 AC_DEFINE([GREP], 1, [We are building grep])
